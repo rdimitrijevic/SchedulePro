@@ -1,22 +1,22 @@
-const http = require('http');
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
-const appRouter = require('./routes');
+const appRouter = require("./routes/index");
 
-const PORT = 3000;
+const port = 3000;
 
 const app = express();
 
 app.use(cors());
-
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true;
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 app.use(appRouter);
 
-const server = http.createServer(app);
-server.listen(port);
 
+app.listen(port, () => console.log(`Connected successfully to port ${port}`));
