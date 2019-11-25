@@ -4,16 +4,13 @@
       <div class="user-info">User ID: </div>
       <div class="user-info">No of tasks: {{ task_val }}</div>
       <div class="user-info">
-        <button type="submit" class="logout-btn">Log out</button>
+        <button type="submit" class="logout-btn" @click="logOut">Log out</button>
       </div>
       <!-- <p class="user-info"></p> -->
     </div>
     <div class="task-div">
-      <AddTask @add-task-err="showAlert" />
+      <AddTask @add-task-err="showAlert"/>
       <Task v-for="task in tasks" :key="task.id" :task="task" />
-    </div>
-    <div id="alert" class="alert alert-danger" role="alert" v-show="alert">
-      {{ alertText }}
     </div>
   </div>
 </template>
@@ -29,9 +26,7 @@ export default {
   data() {
     return {
       task_val: 0,
-      tasks: [],
-      alert: false,
-      alertText: ""
+      tasks: []
     };
   },
   components: {
@@ -42,6 +37,12 @@ export default {
     showAlert(msg) {
       this.alertText = msg;
       this.alert = true;
+      console.log(this.alertText + " " + this.alert);
+    },
+    logOut(){
+      this.tasks = [];
+      this.task_val = 0;
+      this.$router.push('/');
     }
   },
   created() {
@@ -57,6 +58,7 @@ export default {
 
 <style scoped>
 #main-page {
+  display: block;
   margin: auto;
   width: 60%;
   background-color: rgb(230, 230, 230);
@@ -65,12 +67,6 @@ export default {
   overflow: hidden;
   border-radius: 5px;
   border: 3px solid rgb(28, 83, 145);
-}
-
-#alert {
-  width: 40%;
-  margin-top: 1%;
-  margin-left: 1%;
 }
 
 .task-div {

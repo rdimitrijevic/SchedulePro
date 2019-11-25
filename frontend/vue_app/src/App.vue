@@ -1,27 +1,6 @@
 <template>
-  <div id="app">
-    <!-- <Welcome /> -->
-    
+  <div id="app">    
     <router-view />
-    <!-- <Welcome
-      v-show="value === 1"
-      :leftMargin="leftPadding"
-      v-on:sign-up-event="value = 3"
-      v-on:log-in-event="value = 2"
-    ></Welcome>
-    <LogIn
-      :leftMargin="leftPadding"
-      v-show="value === 2"
-      v-on:log-in-back="value = 1"
-      @log-in-ok="loginOk"
-    ></LogIn>
-    <SignUp
-      :leftMargin="leftPadding"
-      v-show="value === 3"
-      v-on:signup-back="value = 1"
-      @signup-ok="loginOk"
-    ></SignUp>
-    <MainPage v-if="value === 4" :tasks="tasksArr" /> -->
   </div>
 </template>
 

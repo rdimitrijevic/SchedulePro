@@ -1,13 +1,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const mongoose = require("mongoose");
+const path = require('path');
 
 const appRouter = require("./routes/index");
 
 const port = 3000;
 
 const app = express();
+
+const history = require('connect-history-api-fallback');
+
+const staticMiddleware = express.static(path.join(__dirname, 'dist'));
+app.use(staticMiddleware);
+app.use(history());
+app.use(staticMiddleware);
+
 
 app.use(cors({
   credentials: false,

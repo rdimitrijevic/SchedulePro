@@ -15,6 +15,9 @@
       v-model="form.tasktxt"
       placeholder="Write description"
     ></b-form-textarea>
+    <div id="alert" class="alert alert-danger" role="alert" v-show="alert">
+      {{ alertText }}
+    </div>
   </div>
 </template>
 
@@ -28,16 +31,22 @@ export default {
       form: {
         taskname: "",
         tasktxt: ""
-      }
+      },
+      alert: false,
+      alertText: ""
     };
   },
   methods: {
     validate() {
-      if (this.form.tasktxt.lenght === 0) {
-        this.$emit("add-task-err", "Task must contain a description");
+      if (this.form.tasktxt.length == 0) {
+        console.log("no content in task");
+        this.alert = true;
+        this.alertText = "Task must contain a description";
         return false;
-      } else if (!this.form.taskname.length === 0) {
-        this.$emit("add-task-err", "Task must have a title");
+      } else if (this.form.taskname.length == 0) {
+        console.log("no title in task");
+        this.alert = true;
+        this.alertText = "Task must have a title";
         return false;
       }
 
@@ -45,21 +54,24 @@ export default {
     },
     addTask(event) {
       event.preventDefault();
+      console.log("uso sam u add task");
       if (this.validate()) {
+        console.log("uso sam u validate");
         const parameters = {
           owner_email: null,
           title: this.form.taskname,
           content: this.form.tasktxt
         };
 
-        axios.post("http://localhost:3000/addtask", parameters)
+        axios
+          .post("http://localhost:3000/addtask", parameters)
           .then(response => {
             console.log("axios");
-            if (response.success) {
-              console.log(response.succes);
-              this.form.taskname = '';
-              this.form.tasktxt = '';
-              window.location.reload();
+            if (response.data.success) {
+              console.log(response.data.succes);
+              this.form.taskname = "";
+              this.form.tasktxt = "";
+              this.$router.go();
             }
           });
       }
@@ -76,6 +88,14 @@ export default {
   border-top-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
+#alert {
+  width: 98%;
+  height: 50px;
+  margin-top: 1%;
+  margin-left: 1%;
+}
+
 
 .task-heading {
   overflow-x: hidden;

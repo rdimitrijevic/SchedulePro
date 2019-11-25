@@ -9,6 +9,6 @@ router.get('/all', auth.authenticated, task.getUserTasks);
 
 router.post('/addtask', auth.authenticated, task.addTask);
 
-router.delete('/deltask', auth.authenticated, task.deleteTask);
+router.delete('/deltask/:id', auth.deleteAuthenticated, task.deleteTask);
 
 module.exports = router;
