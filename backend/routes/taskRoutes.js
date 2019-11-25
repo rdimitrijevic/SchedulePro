@@ -1,13 +1,14 @@
 const express = require('express');
 
+const auth = require('../authentication/auth');
 const router = express.Router();
 
 const task = require('../services/taskServices');
 
-router.get('/', task.getUserTasks);
+router.get('/all', auth.authenticated, task.getUserTasks);
 
-router.post('/addtask', task.addTask);
+router.post('/addtask', auth.authenticated, task.addTask);
 
-router.delete('/deltask', task.deleteTask);
+router.delete('/deltask', auth.authenticated, task.deleteTask);
 
 module.exports = router;

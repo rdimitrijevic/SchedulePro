@@ -1,23 +1,14 @@
 <template>
   <div id="task">
-    <div class="upper-task"><p class="task-heading">{{taskname}}</p> <button class="btn-delete"><span>&times;</span></button> </div>
-    <textarea class="form-control" type="text" v-model="tasktxt" placeholder="Placeholder" readonly></textarea>
+    <div class="upper-task"><p class="task-heading">{{task.title}}</p> <button class="btn-delete"><span>&times;</span></button> </div>
+    <textarea class="form-control" type="text" v-model="task.content" placeholder="Placeholder" readonly></textarea>
   </div>
 </template>
 
 <script>
 export default {
     name: "task",
-    props: {
-      taskname: {
-        type: String,
-        default: 'Task name'
-      },
-      tasktxt: {
-        type: String,
-        default: 'Some text'
-      }
-    }
+    props: ['task']
 };
 </script>
 
@@ -30,7 +21,6 @@ export default {
 
     .task-heading {
       display: inline;
-      margin-bottom: 0;
     }
 
     .upper-task {

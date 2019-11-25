@@ -3,12 +3,15 @@ const Task = require('../models/Task');
 
 async function addTask(req, res) {
     const newTask = new Task({
-        owner_email: req.body.owner_email,
+        owner_email: req.user.email,
         title: req.body.title,
         content: req.body.content
     });
 
-    newTask.save().then((doc) => res.json({message: "successfully added task"}));
+    newTask.save().then(() => {
+        res.status(201);
+        res.json({success: "successfully added task"})
+    });
 }
 
 async function deleteTask(req, res) {
@@ -22,13 +25,10 @@ async function deleteTask(req, res) {
 }
 
 async function getUserTasks(req, res) {
-    await Task.find({owner_email: req.body.owner_email}, (err, doc) => {
-        if(!err) {
-            res.json(doc);
-        } else {
-            res.json({message: "tasks empty"});
-        }
-    });
+    await Task.find({owner_email: req.user.email}, (err, doc) => {
+        res.status(200).json(doc);
+    })
+    .catch(err => console.log(err));
 }
 
 module.exports = {

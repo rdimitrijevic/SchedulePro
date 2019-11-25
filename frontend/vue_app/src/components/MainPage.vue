@@ -1,24 +1,19 @@
 <template>
   <div id="main-page">
     <div class="user-bar">
-      <div class="user-info">User ID: {{email}}</div>
-      <div class="user-info">No of tasks: {{tasknum}}</div>
+      <div class="user-info">User ID: </div>
+      <div class="user-info">No of tasks: {{ task_val }}</div>
       <div class="user-info">
         <button type="submit" class="logout-btn">Log out</button>
       </div>
       <!-- <p class="user-info"></p> -->
     </div>
     <div class="task-div">
-      <AddTask />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
-      <Task />
+      <AddTask @add-task-err="showAlert" />
+      <Task v-for="task in tasks" :key="task.id" :task="task" />
+    </div>
+    <div id="alert" class="alert alert-danger" role="alert" v-show="alert">
+      {{ alertText }}
     </div>
   </div>
 </template>
@@ -26,22 +21,36 @@
 <script>
 import Task from "./Task.vue";
 import AddTask from "./AddTask.vue";
+import axios from 'axios';
 
+/* eslint-disable no-console */
 export default {
   name: "main-page",
-  props: {
-    email: {
-      type: String,
-      default: "example@exmp.com"
-    },
-    tasknum: {
-      type: Number,
-      default: 0
-    }
+  data() {
+    return {
+      task_val: 0,
+      tasks: [],
+      alert: false,
+      alertText: ""
+    };
   },
   components: {
     Task,
     AddTask
+  },
+  methods: {
+    showAlert(msg) {
+      this.alertText = msg;
+      this.alert = true;
+    }
+  },
+  created() {
+    axios.get('http://localhost:3000/all')
+      .then(res => {
+        this.tasks = res.data;
+        this.task_val = this.tasks.length;
+      })
+      .catch(err => console.log(err));
   }
 };
 </script>
@@ -58,24 +67,30 @@ export default {
   border: 3px solid rgb(28, 83, 145);
 }
 
+#alert {
+  width: 40%;
+  margin-top: 1%;
+  margin-left: 1%;
+}
+
 .task-div {
   display: block;
   background-color: #ffffff;
   padding: 5px 2px 0px 3px;
   margin-top: 0;
   height: 94%;
-  overflow-y:scroll;
-  border:rgb(55, 121, 197) 1px solid;
+  overflow-y: scroll;
+  border: rgb(55, 121, 197) 1px solid;
 }
 
 .user-info:first-child {
- margin-left: 0%; 
+  margin-left: 0%;
 }
 
 .user-info {
   display: inline-block;
   margin-bottom: 0;
-  margin-left: 25%; 
+  margin-left: 25%;
 }
 
 .user-bar {
@@ -97,7 +112,7 @@ export default {
 }
 
 .logout-btn:hover {
-  text-decoration:underline;
+  text-decoration: underline;
   border: rgb(28, 83, 145) 1px solid;
   color: rgb(28, 83, 145);
 }

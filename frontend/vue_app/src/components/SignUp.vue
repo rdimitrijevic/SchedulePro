@@ -1,5 +1,5 @@
 <template>
-  <div id="sign-up-page" :style="{marginLeft: leftMargin + '%'}">
+  <div id="sign-up-page" :style="{marginLeft: 30 + '%', paddingTop: 5 + '%'}">
     <Logo />
     <form>
       <div class="form-group">
@@ -8,7 +8,7 @@
           type="email"
           class="form-control"
           id="sign-up-email"
-          v-model="email"
+          v-model="form.email"
           placeholder="example@mail.com..."
         />
       </div>
@@ -18,7 +18,7 @@
           type="password"
           class="form-control"
           id="sign-up-pass"
-          v-model="pass"
+          v-model="form.pass"
           placeholder="Desired password..."
         />
       </div>
@@ -28,12 +28,14 @@
           type="password"
           class="form-control"
           id="sign-up-rep-pass"
-          v-model="repeatPass"
+          v-model="form.repeatPass"
           placeholder="Repeat desired password..."
         />
       </div>
-      <button class="btn btn-outline-primary" type="submit" @click="check" href="#">Confirm</button><br>
-      <button type="button" class="btn btn-link" @click="$emit('signup-back')"> &lt; Back</button>
+      <b-button class="btn btn-outline-primary" type="submit" @click="submit">Confirm</b-button><br>
+      <router-link class="btn btn-link" :to="'/'">
+        &lt; Back
+      </router-link>
     </form>
     <div class="alert alert-danger" role="alert" v-show="alert">{{alertText}}</div>
   </div>
@@ -41,17 +43,19 @@
 
 <script>
 import Logo from "./Logo.vue";
+import axios from 'axios';
 
 export default {
   name: "sign-up-page",
-  props:['leftMargin'],
   data() {
     return {
       alert: false,
       alertText: " ",
-      email: "",
-      pass: "",
-      repeatPass: ""
+      form: {
+        email: "",
+        pass: "",
+        repeatPass: ""
+      }
     }
   },
   components: {
@@ -59,24 +63,55 @@ export default {
   },
   /* eslint-disable no-console */
   methods: {
-    check (event) {
+    submit (event) {
       event.preventDefault();
 
-      if(this.pass.length < 8){
-        console.log("Pass to short");
+      if(this.form.email.length < 1){
+        this.alert = true;
+        this.alertText = "No email entered";
+        return;
+      }
+
+      if(this.form.email.indexOf("@") === -1){
+        this.alert = true;
+        this.alertText = "Not a valid email adress";
+        return;
+      }
+
+      if(this.form.pass.length < 8){
         this.alert = true;
         this.alertText = "Your password must be at least 8 characters";
         return;
       }
 
-      if(this.pass !== this.repeatPass){
-        console.log("Pass not match");
+      if(this.form.pass !== this.form.repeatPass){
         this.alert = true;
         this.alertText = "Your passwords do not match";
         return;
       }
 
-      console.log("Email: " + this.email + " Pass: " + this.pass + " repeatPass: " + this.repeatPass);
+      const userInput = {
+        email: this.form.email,
+        password: this.form.pass
+      };
+
+      axios.post("http://localhost:3000/usr/sign-up", userInput)
+        .then((res) => {
+          if(res){
+            this.$router.push('/signin');
+          } 
+        })
+        .catch( err => {
+          if(err.message === "Request failed with status code 400"){
+            this.alert = true;
+            this.alertText = "Email allready exists";
+          }
+
+          if(err === "Request failed with status code 500") {
+            this.alert = true;
+            this.alertText = "Server error: try again later";
+          }
+        });
     }
   }
 };

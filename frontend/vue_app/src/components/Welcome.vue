@@ -1,10 +1,10 @@
 <template>
-  <div id="welcome-form" :style="{marginLeft: leftMargin + '%'}">
+  <div id="welcome-form">
     <Logo />
     <div class="sign-log-btns">
       <div class="row">
-        <button type="button" class="my-btn log-btn" href="\login" @click="$emit('log-in-event')">Log In</button>
-        <button type="button" class="my-btn sign-btn" href="\signup" @click="$emit('sign-up-event')">Sign Up</button>
+        <router-link class="my-btn log-btn" :to="'/signin'">Log In</router-link>
+        <router-link class="my-btn sign-btn" :to="'/signup'">Sign Up</router-link>
       </div>
     </div>
   </div>
@@ -16,7 +16,6 @@ import Logo from './Logo.vue';
 
 export default {
   name: "welcome-form",
-  props: ['leftMargin'],
   components: {
     Logo
   }
@@ -80,6 +79,8 @@ export default {
 
 #welcome-form {
   position: relative;
+  padding-top: 15%;
+  margin-left: 34%;
   width: 600px;
 }
 </style>

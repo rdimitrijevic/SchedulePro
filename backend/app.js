@@ -9,7 +9,10 @@ const port = 3000;
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  credentials: false,
+  origin:"http://localhost:8080"
+}));  
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
